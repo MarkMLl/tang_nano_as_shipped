@@ -1,5 +1,5 @@
 # tang_nano_as_shipped
-A close approximation of the demo code on Sipeed Tang Nano bboards as shipped.
+A close approximation of the demo code on Sipeed Tang Nano boards as shipped.
 
 <pre>/* I've not been able to find the source of the bitstream which is preloaded  */
 /* onto the Sipeed Tang Nano "Little Bee" demo board. This is notable for     */
