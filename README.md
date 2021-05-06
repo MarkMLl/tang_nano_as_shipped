@@ -31,7 +31,7 @@ blacklist ftdi_sio</pre>
 and
 
 <pre>/etc/udev/rules.d/51-tang-nano.rules
-# Remember to  udevadm control --reload  and to blacklist the module.
+# Remember to  udevadm control --reload  and to blacklist/remove the ftdi_sio the module.
 
 KERNEL=="ttyUSB*", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010", GROUP="plugdev", MODE:="0660"
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010", ATTRS{product}=="Sipeed-Debug", GROUP="plugdev", MODE="0660"
