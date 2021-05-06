@@ -18,3 +18,26 @@ A close approximation of the demo code on Sipeed Tang Nano boards as shipped.
 /* I've left them like this since that's how they're defined in the donor     */
 /* project, although I have corrected their order so that the sequence is the */
 /* more conventional off-R-G-B, and used button A to reverse the sequence.    */</pre>
+
+The serial interface chip on the Tang Nano board is underpowered, and grossly inadequate when plugged directly into a modern computer. Assume that for reliable operation you need a USB v1 hub, although many other cheap hubs have such poor performance that they might be suitable.
+
+I can't speak for Windows, but on Linux you need to add (or enable the lines in) two additional configuration files before plugging the board in:
+
+<pre>/etc/modprobe.d/tang-nano.conf
+# Blacklisted to allow the Gowin programmer to run.
+
+blacklist ftdi_sio</pre>
+
+and
+
+<pre>/etc/udev/rules.d/51-tang-nano.rules
+# Remember to  udevadm control --reload  and to blacklist the module.
+
+KERNEL=="ttyUSB*", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010", GROUP="plugdev", MODE:="0660"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010", ATTRS{product}=="Sipeed-Debug", GROUP="plugdev", MODE="0660"
+
+# NOTE: This illicitly uses an FTDI identifier, so should be left disabled.</pre>
+
+If you don't have those, don't reload the udev rules, or don't remove ftdi_sio after adding/enabling the files, the Gowin programmer will attempt to run rmmod to remove ftdi_sio... this will of course fail for an unprivileged user.
+
+So to wrap up, I say again: TWO configuration files, RELOAD udev, and BLACKLIST ftdi_sio.
