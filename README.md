@@ -1,7 +1,7 @@
 # tang_nano_as_shipped
 A close approximation of the demo code on Sipeed Tang Nano bboards as shipped.
 
-/* I've not been able to find the source of the bitstream which is preloaded  */
+<pre>/* I've not been able to find the source of the bitstream which is preloaded  */
 /* onto the Sipeed Tang Nano "Little Bee" demo board. This is notable for     */
 /*                                                                            */
 /*       * Cycling its LEDs in the sequence off-G-B-R by sequencing each low  */
@@ -17,4 +17,4 @@ A close approximation of the demo code on Sipeed Tang Nano bboards as shipped.
 /* The LED signals could be conveniently redefined as a three-bit register.   */
 /* I've left them like this since that's how they're defined in the donor     */
 /* project, although I have corrected their order so that the sequence is the */
-/* more conventional off-R-G-B, and used button A to reverse the sequence.    */
+/* more conventional off-R-G-B, and used button A to reverse the sequence.    */</pre>
