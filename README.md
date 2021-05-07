@@ -1,8 +1,10 @@
 # tang_nano_as_shipped
 A close approximation of the demo code on Sipeed Tang Nano boards as shipped.
 
-<pre>/* I've not been able to find the source of the bitstream which is preloaded  */
-/* onto the Sipeed Tang Nano "Little Bee" demo board. This is notable for     */
+<pre>/* When I wrote this, I had not been able to find the source of the bitstream */
+/* which is preloaded onto the Sipeed Tang Nano "Little Bee" demo board (it   */
+/* has since turned up, the link in Sipeed's documentation was broken). This  */
+/* is notable for                                                             */
 /*                                                                            */
 /*       * Cycling its LEDs in the sequence off-G-B-R by sequencing each low  */
 /*       * Cycle time is measured to be 4.19 seconds                          */
@@ -40,4 +42,4 @@ SUBSYSTEMS=="usb", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010", ATTRS{prod
 
 If you don't have those, don't reload the udev rules, or don't remove ftdi_sio after adding/enabling the files, the Gowin programmer will attempt to run rmmod to remove ftdi_sio... this will of course fail for an unprivileged user.
 
-So to wrap up, I say again: TWO configuration files, RELOAD udev, and BLACKLIST ftdi_sio.
+So to wrap up, I say again: TWO configuration files, RELOAD udev, and REMOVE ftdi_sio.
