@@ -1,7 +1,9 @@
 /******************************************************************************/
 /*                                                                            */
-/* I've not been able to find the source of the bitstream which is preloaded  */
-/* onto the Sipeed Tang Nano "Little Bee" demo board. This is notable for     */
+/* When I wrote this, I had not been able to find the source of the bitstream */
+/* which is preloaded onto the Sipeed Tang Nano "Little Bee" demo board (it   */
+/* has since turned up, the link in Sipeed's documentation was broken). This  */
+/* is distinguished by                                                        */
 /*                                                                            */
 /*       * Cycling its LEDs in the sequence off-G-B-R by sequencing each low  */
 /*       * Cycle time is measured to be 4.19 seconds                          */
@@ -11,7 +13,9 @@
 /* This is an attempt to reconstitute the missing project. It borrows heavily */
 /* from https://github.com/andrsmllr/tang_nano_devbrd but chops out stuff     */
 /* which isn't strictly necessary and attempts to indicate what imports (in   */
-/* particular the clocks) actually are in terms of files.        MarkMLl      */ 
+/* particular the clocks) actually are in terms of files.        MarkMLl      */
+/*                                                                            */
+/* Verilog -> VHDL assisted by https://github.com/PacoReinaCampo/verilog2vhdl */
 /*                                                                            */
 /******************************************************************************/
 
@@ -38,15 +42,16 @@ initial begin
     LED_B      <= 1'b1;
 end
 
+assign rstn = USER_BTN_B;
+assign reverse = USER_BTN_A;
+
 /* The physical clock is a 24MHz crystal module.                              */
 
 assign clk_24M = XTAL_IN;
-assign rstn = USER_BTN_B;
-assign reverse = ~USER_BTN_A;
 
 /******************************************************************************/
 /*                                                                            */
-/* Verilog is an ALGOL (rather than Pascal) derivative and as such "types"    */
+/* Verilog is an ALGOL-60 (rather than Pascal) derivative and as such "types" */
 /* appear before "names". The "types" in the cases below are modules which    */
 /* have been pulled in from files which have to be explicitly added to the    */
 /* project, in the current project these are Verilog (.v) files in the        */
@@ -55,7 +60,7 @@ assign reverse = ~USER_BTN_A;
 /* of OSCH and rPLL modules, these appear to be declared (complete with       */
 /* definitive parameter names) in IDE/bin/prim_syn.v plus an associated       */
 /* primitive.xml presumably for the IDE; there are also related files in      */
-/* ISE/simlib/gw1n etc. The lowest level of definition is buried in .so files */
+/* IDE/simlib/gw1n etc. The lowest level of definition is buried in .so files */
 /* (presumably .dll libraries in the case of Windows) in IDE/ipcore/OSC and   */
 /* IDE/ipcore/rPLL, but note that the doc directory for each module includes  */
 /* a *help.html file which has a comprehensive description of each parameter  */
@@ -96,9 +101,13 @@ Gowin_rPLL Gowin_rPLL_inst(
 /* from the counter MSB so would not have an even mark/space ratio due to the */
 /* arbitrary preload value.                                                   */
 
-assign clk_prescale = clk_24M;          parameter preload =  32'd12_576_000;
-// assign clk_prescale = clk_108M;         parameter preload = 32'd56_592_000;
-// assign clk_prescale = clk_2M5;          parameter preload = 32'd1_310_000;
+/* NOTE THAT in Verilog the prescaler clock and preload can be defined in the */
+/* same place, while in VHDL they're separate. In the latter case, look for   */
+/* BOTH instances of this comment and ensure that what follows is consistent. */
+
+parameter preload =  32'd12_576_000;     assign clk_prescale = clk_24M;
+// parameter preload = 32'd56_592_000;      assign clk_prescale = clk_108M;
+// parameter preload = 32'd1_310_000;       assign clk_prescale = clk_2M5;         
 
 reg [31:0] prescaler = 0;
 reg [0:0] clk_final = 1'b0;
@@ -124,7 +133,11 @@ begin
     if (rstn == 1'b0) begin
         cnt <= 2'd0;
     end else begin
+      if ( reverse == 1'b0) begin
+        cnt <= cnt - 2'b1;
+      end else begin
         cnt <= cnt + 2'b1;
+      end
     end
 end
 
@@ -132,7 +145,7 @@ end
 
 always @ (*)
 begin
-    case(cnt ^ reverse)
+    case(cnt)
         0: begin
                LED_R = 1'b1;
                LED_G = 1'b1;
