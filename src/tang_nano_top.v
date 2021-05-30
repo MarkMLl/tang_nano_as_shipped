@@ -8,7 +8,7 @@
 /*       * Cycling its LEDs in the sequence off-G-B-R by sequencing each low  */
 /*       * Cycle time is measured to be 4.19 seconds                          */
 /*       * Low time for each LED is 1.048 seconds (4.192 / 4)                 */
-/*       * Button B pressed (high) forces reset with all LEDs off (high)      */
+/*       * Button B pressed (low) forces reset with all LEDs off (low)        */
 /*                                                                            */
 /* This is an attempt to reconstitute the missing project. It borrows heavily */
 /* from https://github.com/andrsmllr/tang_nano_devbrd but chops out stuff     */
